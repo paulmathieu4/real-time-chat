@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Channel, ChannelDocument } from './channel.schema';
+import { User } from '../authentication/user.model';
 
 @Injectable()
 export class ChannelService {
@@ -17,5 +18,13 @@ export class ChannelService {
     async exists(channelId: string): Promise<boolean> {
         const result = await this.channelModel.findById(channelId);
         return !!result;
+    }
+
+    async findAll(): Promise<Channel[]> {
+        return this.channelModel.find().exec();
+    }
+
+    async delete(channelId: string): Promise<any> {
+        return await this.channelModel.findByIdAndDelete(channelId);
     }
 }

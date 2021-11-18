@@ -50,10 +50,13 @@ describe('CommentService', () => {
                 },
             );
             try {
-                await service.create({
-                    channelId: '1',
-                    text: 'my text',
-                });
+                await service.create(
+                    {
+                        channelId: '1',
+                        text: 'my text',
+                    },
+                    'userId',
+                );
             } catch (e) {
                 expect(e).toEqual(
                     new Error(
@@ -73,9 +76,10 @@ describe('CommentService', () => {
                 channelId: '1',
                 text: 'my text',
             };
-            expect(await service.create(commentDtoInput)).toEqual(
-                commentDtoInput,
-            );
+            expect(await service.create(commentDtoInput, 'userId')).toEqual({
+                ...commentDtoInput,
+                userId: 'userId',
+            });
         });
 
         it('should correctly return the created comment when no channel id is provided', async () => {
@@ -93,9 +97,10 @@ describe('CommentService', () => {
                     return Promise.resolve(mockedCreatedChannel);
                 },
             );
-            expect(await service.create(commentDtoInput)).toEqual({
+            expect(await service.create(commentDtoInput, 'userId')).toEqual({
                 channelId: mockedCreatedChannel._id,
                 text: commentDtoInput.text,
+                userId: 'userId',
             });
         });
     });

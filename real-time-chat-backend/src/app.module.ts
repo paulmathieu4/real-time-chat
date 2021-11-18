@@ -8,9 +8,10 @@ import { ChannelService } from './channel/channel.service';
 import { Comment, CommentSchema } from './comment/comment.schema';
 import { Channel, ChannelSchema } from './channel/channel.schema';
 import { DatabaseModule } from './database/database.module';
+import { AuthenticationModule } from './authentication/authentication.module';
 
 @Module({
-    imports: [CommentModule, ChannelModule, DatabaseModule],
+    imports: [CommentModule, ChannelModule, DatabaseModule, AuthenticationModule],
     controllers: [AppController],
     providers: [AppService, ChannelService], // TODO: enlever channelService
 })

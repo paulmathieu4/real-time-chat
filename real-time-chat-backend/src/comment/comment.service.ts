@@ -18,8 +18,9 @@ export class CommentService {
 
     async create(
         commentDto: UpsertCommentDto,
-        userId = 'userId',
+        userId: string,
     ): Promise<CommentDocument> {
+        let commentChannelId;
         if (commentDto.channelId) {
             this.logger.debug('Creating comment with channelId provided');
             if (!(await this.channelService.exists(commentDto.channelId))) {
@@ -27,11 +28,7 @@ export class CommentService {
                     `The channel ID of the comment does not exist : ${commentDto.channelId}`,
                 );
             }
-            const createdComment = new this.commentModel({
-                channelId: commentDto.channelId,
-                text: commentDto.text,
-            });
-            return createdComment.save();
+            commentChannelId = commentDto.channelId;
         } else {
             this.logger.debug('Creating comment with no channelId provided');
             const createdChannel: ChannelDocument =
@@ -43,12 +40,14 @@ export class CommentService {
             this.logger.debug(
                 'Created channel: ' + JSON.stringify(createdChannel),
             );
-            const createdComment = new this.commentModel({
-                channelId: createdChannel._id,
-                text: commentDto.text,
-            });
-            return createdComment.save();
+            commentChannelId = createdChannel._id;
         }
+        const createdComment = new this.commentModel({
+            channelId: commentChannelId,
+            text: commentDto.text,
+            userId: userId,
+        });
+        return createdComment.save();
     }
 
     // async findAll(): Promise<Cat[]> {

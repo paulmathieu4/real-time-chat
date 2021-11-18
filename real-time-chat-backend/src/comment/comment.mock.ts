@@ -3,6 +3,7 @@ import { Comment } from './comment.schema';
 export const mockedComment: Comment = {
     text: 'comment text',
     channelId: '1',
+    userId: 'userId',
 };
 
 export class commentModelMock {
