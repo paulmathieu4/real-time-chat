@@ -10,11 +10,15 @@ export class Channel {
     })
     userId: string;
 
-    @Prop()
-    orderId: number;
+    @Prop({
+        required: false,
+    })
+    orderId?: number;
 
-    @Prop()
-    geoReferenceId: number;
+    @Prop({
+        required: false,
+    })
+    geoReferenceId?: number;
 }
 
 export const ChannelSchema = SchemaFactory.createForClass(Channel);
