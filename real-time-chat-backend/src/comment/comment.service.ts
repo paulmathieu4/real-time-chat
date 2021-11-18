@@ -1,22 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CommentDocument } from './comment.schema';
-import { CreateCommentDto } from './comment-dto.model';
+import { UpsertCommentDto } from './comment-dto.model';
 import { Comment } from './comment.schema';
+import { ChannelService } from '../channel/channel.service';
+import { ChannelDocument } from '../channel/channel.schema';
 
 @Injectable()
 export class CommentService {
-  constructor(
-    @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
-  ) {}
+    private readonly logger = new Logger(CommentService.name);
 
-  async create(createCommentDto: CreateCommentDto): Promise<CommentDocument> {
-    const createdComment = new this.commentModel(createCommentDto);
-    return createdComment.save();
-  }
+    constructor(
+        @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
+        private channelService: ChannelService,
+    ) {}
 
-  // async findAll(): Promise<Cat[]> {
-  //   return this.commentModel.find().exec();
-  // }
+    async create(
+        commentDto: UpsertCommentDto,
+        userId = 'userId',
+    ): Promise<CommentDocument> {
+        if (commentDto.channelId) {
+            this.logger.debug('Creating comment with channelId provided');
+            if (!(await this.channelService.exists(commentDto.channelId))) {
+                throw new Error(
+                    `The channel ID of the comment does not exist : ${commentDto.channelId}`,
+                );
+            }
+            const createdComment = new this.commentModel({
+                channelId: commentDto.channelId,
+                text: commentDto.text,
+            });
+            return createdComment.save();
+        } else {
+            this.logger.debug('Creating comment with no channelId provided');
+            const createdChannel: ChannelDocument =
+                await this.channelService.create({
+                    userId: userId,
+                    orderId: commentDto.orderId,
+                    geoReferenceId: commentDto.geoReferenceId,
+                });
+            this.logger.debug(
+                'Created channel: ' + JSON.stringify(createdChannel),
+            );
+            const createdComment = new this.commentModel({
+                channelId: createdChannel._id,
+                text: commentDto.text,
+            });
+            return createdComment.save();
+        }
+    }
+
+    // async findAll(): Promise<Cat[]> {
+    //   return this.commentModel.find().exec();
+    // }
 }

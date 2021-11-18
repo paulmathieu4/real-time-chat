@@ -4,12 +4,11 @@ import { CommentSchema } from './comment.schema';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 import { Comment } from './comment.schema';
+import { ChannelService } from '../channel/channel.service';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
-  ],
-  providers: [CommentService],
-  controllers: [CommentController],
+    imports: [],
+    providers: [CommentService, ChannelService],
+    controllers: [CommentController],
 })
 export class CommentModule {}

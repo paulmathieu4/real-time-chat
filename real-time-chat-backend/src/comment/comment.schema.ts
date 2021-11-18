@@ -5,13 +5,13 @@ export type CommentDocument = Comment & Document;
 
 @Schema()
 export class Comment {
-  @Prop()
-  channelId: number;
+    @Prop()
+    channelId: string;
 
-  @Prop({
-    required: true,
-  })
-  text: string;
+    @Prop({
+        required: true,
+    })
+    text: string;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
