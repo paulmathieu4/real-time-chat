@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+    IsMongoId,
+    IsNotEmpty,
+    IsNumber,
+    IsOptional,
+    IsString,
+} from 'class-validator';
 
 export class UpsertCommentDto {
     @IsOptional()
@@ -15,4 +21,10 @@ export class UpsertCommentDto {
     @IsOptional()
     @IsNumber()
     geoReferenceId?: number;
+}
+
+export class GetCommentQueryParams {
+    @IsNotEmpty()
+    @IsMongoId()
+    channelId: string;
 }

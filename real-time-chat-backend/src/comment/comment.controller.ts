@@ -1,14 +1,17 @@
 import {
     Body,
     Controller,
+    Get,
     HttpException,
     HttpStatus,
     Logger,
     Post,
+    Query,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { UpsertCommentDto } from './comment-dto.model';
+import { GetCommentQueryParams, UpsertCommentDto } from './comment-dto.model';
 import { UserService } from '../authentication/user.service';
+import { Comment } from './comment.schema';
 
 @Controller('comment')
 export class CommentController {
@@ -17,6 +20,13 @@ export class CommentController {
         private commentService: CommentService,
         private userService: UserService,
     ) {}
+
+    @Get()
+    async getChannelComments(
+        @Query() queryParams: GetCommentQueryParams,
+    ): Promise<Comment[]> {
+        return await this.commentService.findByChannelId(queryParams.channelId);
+    }
 
     @Post()
     async create(@Body() upsertCommentDto: UpsertCommentDto): Promise<string> {

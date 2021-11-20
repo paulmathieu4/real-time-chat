@@ -5,7 +5,7 @@ import { CommentDocument } from './comment.schema';
 import { UpsertCommentDto } from './comment-dto.model';
 import { Comment } from './comment.schema';
 import { ChannelService } from '../channel/channel.service';
-import { ChannelDocument } from '../channel/channel.schema';
+import { Channel, ChannelDocument } from '../channel/channel.schema';
 
 @Injectable()
 export class CommentService {
@@ -50,7 +50,7 @@ export class CommentService {
         return createdComment.save();
     }
 
-    // async findAll(): Promise<Cat[]> {
-    //   return this.commentModel.find().exec();
-    // }
+    async findByChannelId(channelId: string): Promise<Comment[]> {
+        return this.commentModel.find({ channelId: channelId }).exec();
+    }
 }
