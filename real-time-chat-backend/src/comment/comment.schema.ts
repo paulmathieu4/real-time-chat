@@ -17,6 +17,11 @@ export class Comment {
         required: true,
     })
     userId: string;
+
+    @Prop({
+        required: true,
+    })
+    date: Date;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

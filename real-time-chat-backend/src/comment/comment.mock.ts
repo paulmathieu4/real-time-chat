@@ -4,6 +4,7 @@ export const mockedComment: Comment = {
     text: 'comment text',
     channelId: '1',
     userId: 'userId',
+    date: new Date(),
 };
 
 export class commentModelMock {

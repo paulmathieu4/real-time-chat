@@ -46,6 +46,7 @@ export class CommentService {
             channelId: commentChannelId,
             text: commentDto.text,
             userId: userId,
+            date: new Date(),
         });
         return createdComment.save();
     }
