@@ -1,0 +1,41 @@
+<h1>Channels</h1>
+<button mat-raised-button color="primary">
+  <mat-icon>add</mat-icon>NEW CHANNEL
+</button>
+<mat-spinner
+  *ngIf="isFetchingData; else channelsTable"
+  class="mt-20 ml-40"
+></mat-spinner>
+<ng-template #channelsTable>
+  <table
+    #channelsTable
+    mat-table
+    [dataSource]="dataSource"
+    class="mat-elevation-z8 channels-table mt-20"
+  >
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>Id</th>
+      <td mat-cell *matCellDef="let element">{{ element._id }}</td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let element">
+        <button
+          mat-raised-button
+          color="primary"
+          [routerLink]="'channel/' + element._id"
+        >
+          <mat-icon>chat</mat-icon>CHAT</button
+        ><button mat-raised-button class="ml-10" color="warn">
+          <mat-icon>delete</mat-icon>DELETE
+        </button>
+      </td>
+    </ng-container>
+  </table>
+</ng-template>
