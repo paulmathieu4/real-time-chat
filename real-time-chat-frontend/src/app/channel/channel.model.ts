@@ -4,3 +4,10 @@ export interface Channel {
   orderId: number;
   userId: string;
 }
+
+export interface Comment {
+  channelId: string;
+  text: string;
+  userId: string;
+  date: Date;
+}

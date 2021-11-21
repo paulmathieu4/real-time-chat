@@ -5,13 +5,18 @@ import {
     HttpException,
     HttpStatus,
     Logger,
+    Param,
     Post,
     Query,
+    Sse,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { GetCommentQueryParams, UpsertCommentDto } from './comment-dto.model';
 import { UserService } from '../authentication/user.service';
-import { Comment } from './comment.schema';
+import { Comment, CommentDocument } from './comment.schema';
+import { CommentsStreamManagerService } from './comments-stream-manager/comments-stream-manager.service';
+import { GetChannelCommentsParams } from '../channel/channel-dto.model';
+import { Observable } from 'rxjs';
 
 @Controller('comment')
 export class CommentController {
@@ -19,13 +24,25 @@ export class CommentController {
     constructor(
         private commentService: CommentService,
         private userService: UserService,
+        private commentStreamManager: CommentsStreamManagerService,
+        private commentsStreamManager: CommentsStreamManagerService,
     ) {}
 
     @Get()
-    async getChannelComments(
+    async getAllChannelComments(
         @Query() queryParams: GetCommentQueryParams,
     ): Promise<Comment[]> {
         return await this.commentService.findByChannelId(queryParams.channelId);
+    }
+
+    @Sse('stream')
+    async getNewCommentsStream(
+        @Query() queryParams: GetCommentQueryParams,
+    ): Promise<Observable<MessageEvent<Comment>>> {
+        this.logger.debug('comment stream endpoint called');
+        return await this.commentsStreamManager.getChannelCommentsStream(
+            queryParams.channelId,
+        );
     }
 
     @Post()
@@ -42,7 +59,16 @@ export class CommentController {
                 HttpStatus.BAD_REQUEST,
             );
         }
-        await this.commentService.create(upsertCommentDto, connectedUser.id);
-        return 'comment created';
+        const createdComment: CommentDocument =
+            await this.commentService.create(
+                upsertCommentDto,
+                connectedUser.id,
+            );
+        await this.commentStreamManager.emitNewComment(
+            upsertCommentDto.channelId,
+            createdComment,
+        );
+
+        return createdComment._id;
     }
 }

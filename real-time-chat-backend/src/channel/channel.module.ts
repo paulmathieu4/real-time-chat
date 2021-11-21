@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Channel, ChannelSchema } from './channel.schema';
 import { ChannelService } from './channel.service';
 import { ChannelController } from './channel.controller';
+import { CommentModule } from '../comment/comment.module';
 
 @Module({
     imports: [],

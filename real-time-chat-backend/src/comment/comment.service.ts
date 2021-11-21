@@ -52,6 +52,9 @@ export class CommentService {
     }
 
     async findByChannelId(channelId: string): Promise<Comment[]> {
-        return this.commentModel.find({ channelId: channelId }).exec();
+        return this.commentModel
+            .find({ channelId: channelId })
+            .sort({ date: 'asc' })
+            .exec();
     }
 }

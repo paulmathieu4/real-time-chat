@@ -16,7 +16,7 @@ import { RouterModule } from '@angular/router';
 import { ChannelComponent } from './channel/channel.component';
 import { NbThemeModule, NbLayoutModule, NbChatModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent, ChannelListComponent, ChannelComponent],
@@ -36,6 +36,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbLayoutModule,
     NbEvaIconsModule,
     NbChatModule,
+    CommonModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

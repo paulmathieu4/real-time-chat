@@ -1,14 +1,18 @@
-<mat-toolbar color="primary">
-  <span
-    >My Chat
-    <mat-icon
-      class="center-vertically"
-      aria-hidden="false"
-      aria-label="Example home icon"
-      >forum</mat-icon
-    ></span
-  >
-</mat-toolbar>
-<div class="page-content">
-  <router-outlet></router-outlet>
-</div>
+<nb-layout>
+  <nb-layout-column class="p-0">
+    <mat-toolbar color="primary">
+      <span [routerLink]="''" class="application-title">
+        My Chat
+        <mat-icon
+          class="center-vertically"
+          aria-hidden="false"
+          aria-label="Example home icon"
+          >forum</mat-icon
+        >
+      </span>
+    </mat-toolbar>
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </nb-layout-column>
+</nb-layout>

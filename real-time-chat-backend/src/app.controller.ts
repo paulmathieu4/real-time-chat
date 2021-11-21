@@ -4,10 +4,7 @@ import { ChannelService } from './channel/channel.service';
 
 @Controller()
 export class AppController {
-    constructor(
-        private readonly appService: AppService,
-        private channelService: ChannelService,
-    ) {}
+    constructor(private readonly appService: AppService) {}
 
     @Get()
     getHello(): string {
