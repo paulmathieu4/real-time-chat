@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { finalize } from 'rxjs/operators';
 import { Channel } from '../channel/channel.model';
+import { AuthenticationService } from '../authentication/authentication.service';
 
 @Component({
   selector: 'app-channel-list',
@@ -13,10 +14,15 @@ export class ChannelListComponent implements OnInit {
   displayedColumns: string[] = ['id', 'actions'];
   dataSource: Channel[] = [];
   isFetchingData = true;
+  isAdmin = false;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(
+    private httpClient: HttpClient,
+    private authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit(): void {
+    this.isAdmin = this.authenticationService.isAdmin;
     this.fetchChannels();
   }
 

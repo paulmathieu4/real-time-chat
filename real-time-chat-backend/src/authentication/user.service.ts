@@ -3,11 +3,12 @@ import { User } from './user.model';
 
 @Injectable()
 export class UserService {
-    getConnectedUser(isAdmin: boolean): User {
+    getConnectedUserFromHeaders(requestHeaders: any): User {
+        const authorizationPayload = JSON.parse(requestHeaders.authorization);
         return {
-            email: 'firstname.lastname@gmail.com',
-            id: '1',
-            isAdmin: isAdmin,
+            id: authorizationPayload?.userId,
+            isAdmin: authorizationPayload?.isAdmin === 'true',
+            email: 'hardcoded@gmail.com',
         };
     }
 }

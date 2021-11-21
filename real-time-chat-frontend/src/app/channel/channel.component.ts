@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
 import { Comment } from './channel.model';
+import { AuthenticationService } from '../authentication/authentication.service';
 
 @Component({
   selector: 'app-channel',
@@ -19,7 +20,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
   comments: Comment[];
   isLoadingComments = true;
 
-  constructor(private route: ActivatedRoute, private httpClient: HttpClient) {}
+  constructor(
+    private route: ActivatedRoute,
+    private httpClient: HttpClient,
+    public authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -58,6 +63,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       `${environment.apiBaseUrl}/comment/stream?channelId=${channelId}`
     );
     this.newCommentsSubscription.onmessage = (message: MessageEvent) => {
+      console.log('onmessage received: ', message);
       this.comments.push(JSON.parse(message.data));
     };
     this.newCommentsSubscription.onerror = (error) => {

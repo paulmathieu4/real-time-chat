@@ -2,11 +2,13 @@ import {
     Body,
     Controller,
     Get,
+    Headers,
     HttpException,
     HttpStatus,
     Logger,
     Post,
     Query,
+    SetMetadata,
     Sse,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
@@ -15,6 +17,7 @@ import { UserService } from '../authentication/user.service';
 import { Comment, CommentDocument } from './comment.schema';
 import { CommentsStreamManagerService } from './comments-stream-manager/comments-stream-manager.service';
 import { Observable } from 'rxjs';
+import { disableAuthMetadataKey } from '../authentication/is-authenticated.guard';
 
 @Controller('comment')
 export class CommentController {
@@ -33,6 +36,7 @@ export class CommentController {
         return await this.commentService.findByChannelId(queryParams.channelId);
     }
 
+    @SetMetadata(disableAuthMetadataKey, true)
     @Sse('stream')
     async getNewCommentsStream(
         @Query() queryParams: GetCommentQueryParams,
@@ -44,8 +48,12 @@ export class CommentController {
     }
 
     @Post()
-    async create(@Body() upsertCommentDto: UpsertCommentDto): Promise<any> {
-        const connectedUser = this.userService.getConnectedUser(false);
+    async create(
+        @Body() upsertCommentDto: UpsertCommentDto,
+        @Headers() headers,
+    ): Promise<any> {
+        const connectedUser =
+            this.userService.getConnectedUserFromHeaders(headers);
         this.logger.debug('create endpoint called!');
         if (
             !upsertCommentDto.channelId &&

@@ -7,7 +7,7 @@
       *ngFor="let comment of comments"
       type="text"
       [message]="comment.text"
-      reply="false"
+      [reply]="comment.userId !== authenticationService.userId"
       [sender]="comment.userId"
       [date]="comment.date"
       [files]="[]"

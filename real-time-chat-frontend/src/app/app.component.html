@@ -16,6 +16,22 @@
       <button mat-flat-button color="primary" [routerLink]="'new-comment'">
         New Comment
       </button>
+      <span class="spacer"></span>
+      <mat-form-field appearance="fill">
+        <mat-label>Is admin</mat-label>
+        <mat-select value="false" (selectionChange)="onIsAdminChange($event)">
+          <mat-option value="true">True</mat-option>
+          <mat-option value="false" selected>False</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="ml-10">
+        <mat-label>User ID</mat-label>
+        <input
+          matInput
+          (change)="onUserIdChange($event)"
+          [value]="authenticationService.userId"
+        />
+      </mat-form-field>
     </mat-toolbar>
     <div class="page-content">
       <router-outlet></router-outlet>
