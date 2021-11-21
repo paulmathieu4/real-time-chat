@@ -26,7 +26,6 @@ export class IsAuthenticatedGuard implements CanActivate {
         const reqAuthorizationPayload = JSON.parse(
             requestHeaders['authorization'],
         );
-        console.log('reqAuthorizationPayload: ', reqAuthorizationPayload);
 
         if (!reqAuthorizationPayload.userId) {
             return false;

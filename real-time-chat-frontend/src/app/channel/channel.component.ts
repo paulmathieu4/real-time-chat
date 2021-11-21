@@ -1,6 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
-import { Subscription } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -63,7 +61,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
       `${environment.apiBaseUrl}/comment/stream?channelId=${channelId}`
     );
     this.newCommentsSubscription.onmessage = (message: MessageEvent) => {
-      console.log('onmessage received: ', message);
       this.comments.push(JSON.parse(message.data));
     };
     this.newCommentsSubscription.onerror = (error) => {
