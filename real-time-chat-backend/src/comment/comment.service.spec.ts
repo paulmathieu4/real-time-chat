@@ -1,15 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CommentService } from './comment.service';
 import { ChannelService } from '../channel/channel.service';
-import { DatabaseModule } from '../database/database.module';
 import { getModelToken } from '@nestjs/mongoose';
 import { Comment } from './comment.schema';
-import { commentModelMock, mockedComment } from './comment.mock';
-import {
-    Channel,
-    ChannelDocument,
-    ChannelSchema,
-} from '../channel/channel.schema';
+import { commentModelMock } from './comment.mock';
+import { Channel, ChannelDocument } from '../channel/channel.schema';
 import { channelModelMock } from '../channel/channel.mock';
 import { UpsertCommentDto } from './comment-dto.model';
 
@@ -72,6 +67,10 @@ describe('CommentService', () => {
                     return Promise.resolve(true);
                 },
             );
+
+            // spy on Date to prevent date differences when comparing "new Date()" values in unit tests
+            const dateSpy = jest.spyOn(global, 'Date');
+
             const commentDtoInput: UpsertCommentDto = {
                 channelId: '1',
                 text: 'my text',
@@ -79,29 +78,77 @@ describe('CommentService', () => {
             expect(await service.create(commentDtoInput, 'userId')).toEqual({
                 ...commentDtoInput,
                 userId: 'userId',
+                date: dateSpy.mock.instances[0], // get what the new Date returned inside service.create
             });
         });
 
-        it('should correctly return the created comment when no channel id is provided', async () => {
-            const commentDtoInput: UpsertCommentDto = {
-                text: 'my text',
-                geoReferenceId: 20,
-            };
-            const mockedCreatedChannel: ChannelDocument = {
-                userId: 'userId',
-                geoReferenceId: 20,
-                _id: 'createdChannelUid',
-            } as ChannelDocument;
-            jest.spyOn(channelService, 'create').mockImplementation(
-                async () => {
-                    return Promise.resolve(mockedCreatedChannel);
-                },
-            );
-            expect(await service.create(commentDtoInput, 'userId')).toEqual({
-                channelId: mockedCreatedChannel._id,
-                text: commentDtoInput.text,
-                userId: 'userId',
-            });
-        });
+        it(
+            'should correctly return the created comment when no channel' +
+                ' id is provided and if no channel exist for the trifecta',
+            async () => {
+                const commentDtoInput: UpsertCommentDto = {
+                    text: 'my text',
+                    geoReferenceId: 20,
+                };
+                const mockedCreatedChannel: ChannelDocument = {
+                    userId: 'userId',
+                    geoReferenceId: 20,
+                    _id: 'createdChannelUid',
+                } as ChannelDocument;
+
+                // spy on Date to prevent date differences when comparing "new Date()" values in unit tests
+                const dateSpy = jest.spyOn(global, 'Date');
+                jest.spyOn(channelService, 'findOne').mockImplementation(
+                    async () => {
+                        return Promise.resolve(null);
+                    },
+                );
+                jest.spyOn(channelService, 'create').mockImplementation(
+                    async () => {
+                        return Promise.resolve(mockedCreatedChannel);
+                    },
+                );
+                expect(await service.create(commentDtoInput, 'userId')).toEqual(
+                    {
+                        channelId: mockedCreatedChannel._id,
+                        text: commentDtoInput.text,
+                        userId: 'userId',
+                        date: dateSpy.mock.instances[0], // get what the new Date returned inside service.create
+                    },
+                );
+            },
+        );
+
+        it(
+            'should correctly return the created comment when no channel' +
+                ' id is provided and if a channel already exists for the trifecta',
+            async () => {
+                const commentDtoInput: UpsertCommentDto = {
+                    text: 'my text',
+                    geoReferenceId: 20,
+                };
+                const mockedExistingChannel: ChannelDocument = {
+                    userId: 'userId',
+                    geoReferenceId: 20,
+                    _id: 'createdChannelUid',
+                } as ChannelDocument;
+
+                // spy on Date to prevent date differences when comparing "new Date()" values in unit tests
+                const dateSpy = jest.spyOn(global, 'Date');
+                jest.spyOn(channelService, 'findOne').mockImplementation(
+                    async () => {
+                        return Promise.resolve(mockedExistingChannel);
+                    },
+                );
+                expect(await service.create(commentDtoInput, 'userId')).toEqual(
+                    {
+                        channelId: mockedExistingChannel._id,
+                        text: commentDtoInput.text,
+                        userId: 'userId',
+                        date: dateSpy.mock.instances[0], // get what the new Date returned inside service.create
+                    },
+                );
+            },
+        );
     });
 });
