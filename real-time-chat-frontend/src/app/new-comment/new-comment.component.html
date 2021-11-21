@@ -1,0 +1,33 @@
+<h1>New Comment</h1>
+<form [formGroup]="form">
+  <p>
+    <mat-form-field appearance="fill">
+      <mat-label>Geo Reference ID</mat-label>
+      <input matInput formControlName="geoReferenceId" type="number" />
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field appearance="fill">
+      <mat-label>Order ID</mat-label>
+      <input matInput type="number" formControlName="orderId" />
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field appearance="fill">
+      <mat-label>Comment</mat-label>
+      <textarea matInput required formControlName="text"></textarea>
+      <mat-error *ngIf="form.get('text').errors?.['required']">
+        Comment is required.
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="postComment()"
+    [disabled]="form.disabled"
+  >
+    POST COMMENT
+  </button>
+</form>

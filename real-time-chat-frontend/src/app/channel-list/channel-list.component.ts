@@ -17,6 +17,24 @@ export class ChannelListComponent implements OnInit {
   constructor(private httpClient: HttpClient) {}
 
   ngOnInit(): void {
+    this.fetchChannels();
+  }
+
+  deleteChannel(channelId: string) {
+    this.httpClient
+      .delete(`${environment.apiBaseUrl}/channel/${channelId}`)
+      .subscribe(
+        (data) => {
+          this.fetchChannels();
+        },
+        (error) => {
+          console.error('Error in deleteChannel: ', error);
+        }
+      );
+  }
+
+  fetchChannels() {
+    this.isFetchingData = true;
     this.httpClient
       .get<Channel[]>(`${environment.apiBaseUrl}/channel`)
       .pipe(

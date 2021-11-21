@@ -20,6 +20,20 @@ export class ChannelService {
         return !!result;
     }
 
+    findOne(
+        userId: string,
+        geoReferenceId: number,
+        orderId: number,
+    ): Promise<ChannelDocument> {
+        return this.channelModel
+            .findOne({
+                userId: userId,
+                geoReferenceId: geoReferenceId,
+                orderId: orderId,
+            })
+            .exec();
+    }
+
     async findAll(): Promise<Channel[]> {
         return this.channelModel.find().exec();
     }

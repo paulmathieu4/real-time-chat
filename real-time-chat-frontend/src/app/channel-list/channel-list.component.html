@@ -1,7 +1,4 @@
 <h1>Channels</h1>
-<button mat-raised-button color="primary">
-  <mat-icon>add</mat-icon>NEW CHANNEL
-</button>
 <mat-spinner
   *ngIf="isFetchingData; else channelsTable"
   class="mt-20 ml-40"
@@ -32,7 +29,12 @@
           [routerLink]="'channel/' + element._id"
         >
           <mat-icon>chat</mat-icon>CHAT</button
-        ><button mat-raised-button class="ml-10" color="warn" (click)="deleteChannel(element._id)">
+        ><button
+          mat-raised-button
+          class="ml-10"
+          color="warn"
+          (click)="deleteChannel(element._id)"
+        >
           <mat-icon>delete</mat-icon>DELETE
         </button>
       </td>

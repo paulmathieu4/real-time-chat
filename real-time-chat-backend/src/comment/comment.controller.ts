@@ -5,7 +5,6 @@ import {
     HttpException,
     HttpStatus,
     Logger,
-    Param,
     Post,
     Query,
     Sse,
@@ -15,7 +14,6 @@ import { GetCommentQueryParams, UpsertCommentDto } from './comment-dto.model';
 import { UserService } from '../authentication/user.service';
 import { Comment, CommentDocument } from './comment.schema';
 import { CommentsStreamManagerService } from './comments-stream-manager/comments-stream-manager.service';
-import { GetChannelCommentsParams } from '../channel/channel-dto.model';
 import { Observable } from 'rxjs';
 
 @Controller('comment')
@@ -46,7 +44,7 @@ export class CommentController {
     }
 
     @Post()
-    async create(@Body() upsertCommentDto: UpsertCommentDto): Promise<string> {
+    async create(@Body() upsertCommentDto: UpsertCommentDto): Promise<any> {
         const connectedUser = this.userService.getConnectedUser(false);
         this.logger.debug('create endpoint called!');
         if (
@@ -69,6 +67,6 @@ export class CommentController {
             createdComment,
         );
 
-        return createdComment._id;
+        return createdComment;
     }
 }

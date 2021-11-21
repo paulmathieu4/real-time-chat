@@ -17,9 +17,18 @@ import { ChannelComponent } from './channel/channel.component';
 import { NbThemeModule, NbLayoutModule, NbChatModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { CommonModule } from '@angular/common';
+import { NewCommentComponent } from './new-comment/new-comment.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, ChannelListComponent, ChannelComponent],
+  declarations: [
+    AppComponent,
+    ChannelListComponent,
+    ChannelComponent,
+    NewCommentComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -37,6 +46,10 @@ import { CommonModule } from '@angular/common';
     NbEvaIconsModule,
     NbChatModule,
     CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

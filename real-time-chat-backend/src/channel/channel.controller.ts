@@ -21,8 +21,7 @@ export class ChannelController {
 
     // TODO: only allow admins
     @Delete(':id')
-    async deleteChannel(@Param() params: DeleteChannelParams): Promise<string> {
+    async deleteChannel(@Param() params: DeleteChannelParams) {
         await this.channelService.delete(params.id);
-        return `Channel ${params.id} deleted.`;
     }
 }

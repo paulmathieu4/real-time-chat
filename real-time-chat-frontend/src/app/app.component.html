@@ -10,6 +10,12 @@
           >forum</mat-icon
         >
       </span>
+      <button mat-flat-button color="primary" class="ml-20" [routerLink]="''">
+        Channels
+      </button>
+      <button mat-flat-button color="primary" [routerLink]="'new-comment'">
+        New Comment
+      </button>
     </mat-toolbar>
     <div class="page-content">
       <router-outlet></router-outlet>

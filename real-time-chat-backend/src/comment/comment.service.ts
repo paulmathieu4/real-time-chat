@@ -5,7 +5,7 @@ import { CommentDocument } from './comment.schema';
 import { UpsertCommentDto } from './comment-dto.model';
 import { Comment } from './comment.schema';
 import { ChannelService } from '../channel/channel.service';
-import { Channel, ChannelDocument } from '../channel/channel.schema';
+import { ChannelDocument } from '../channel/channel.schema';
 
 @Injectable()
 export class CommentService {
@@ -31,16 +31,29 @@ export class CommentService {
             commentChannelId = commentDto.channelId;
         } else {
             this.logger.debug('Creating comment with no channelId provided');
-            const createdChannel: ChannelDocument =
-                await this.channelService.create({
+            let commentChannel: ChannelDocument;
+            const existingChannel: ChannelDocument =
+                await this.channelService.findOne(
+                    userId,
+                    commentDto.geoReferenceId,
+                    commentDto.orderId,
+                );
+            if (existingChannel) {
+                this.logger.debug(
+                    'Comment channel already exists for trifecta (userId, geoReferenceId, orderId)',
+                );
+                commentChannel = existingChannel;
+            } else {
+                this.logger.debug(
+                    'Comment channel does not exist for trifecta (userId, geoReferenceId, orderId), create it.',
+                );
+                commentChannel = await this.channelService.create({
                     userId: userId,
                     orderId: commentDto.orderId,
                     geoReferenceId: commentDto.geoReferenceId,
                 });
-            this.logger.debug(
-                'Created channel: ' + JSON.stringify(createdChannel),
-            );
-            commentChannelId = createdChannel._id;
+            }
+            commentChannelId = commentChannel._id;
         }
         const createdComment = new this.commentModel({
             channelId: commentChannelId,
