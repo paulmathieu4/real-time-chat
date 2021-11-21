@@ -14,6 +14,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
 import { ChannelComponent } from './channel/channel.component';
+import { NbThemeModule, NbLayoutModule, NbChatModule } from '@nebular/theme';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
+
 
 @NgModule({
   declarations: [AppComponent, ChannelListComponent, ChannelComponent],
@@ -29,6 +32,10 @@ import { ChannelComponent } from './channel/channel.component';
     HttpClientModule,
     MatProgressSpinnerModule,
     RouterModule,
+    NbThemeModule.forRoot({ name: 'default' }),
+    NbLayoutModule,
+    NbEvaIconsModule,
+    NbChatModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
