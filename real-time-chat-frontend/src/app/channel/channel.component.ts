@@ -36,8 +36,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
   messages: any[] = [];
 
   sendMessage(event: any) {
-    console.log('send message event: ', event);
-
     this.httpClient
       .post(`${environment.apiBaseUrl}/comment`, {
         channelId: this.channelId,
